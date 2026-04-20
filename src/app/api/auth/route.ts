@@ -12,7 +12,7 @@ export async function POST(request: Request) {
     const result = loginSchema.safeParse(body);
 
     if (!result.success) {
-      return NextResponse.json({ error: 'Invalid input', details: result.error.errors }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid input', details: result.error.issues }, { status: 400 });
     }
 
     const { username, password } = result.data;
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     // Mock Authentication: in a real app, verify against a database securely.
     if (username === 'admin' && password === 'password') {
       const response = NextResponse.json({ success: true });
-      
+
       // Set secure HttpOnly cookie
       response.cookies.set({
         name: 'auth_token',
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
         maxAge: 60 * 60 * 24, // 1 day
         path: '/',
       });
-      
+
       return response;
     }
 
